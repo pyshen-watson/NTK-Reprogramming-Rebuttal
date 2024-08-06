@@ -1,3 +1,4 @@
+
 # [NIPS2024] NTK Rebuttal
 ## Author Rebuttal
 Dear Area Chairs and Senior Area Chairs,
@@ -7,7 +8,7 @@ We truly appreciate your dedication and time spent coordinating our reviews. In 
 For "whether our NTK analysis can be extended to other large-scale models and large-scale datasets", we have performed additional experiments on ResNet/VGG trained on ImageNet-10 to respond to reviewers' concern. The experimental results further support our theoretical predictions. 
 
 
-For "reasonability of untrainable output mapping assumption", we would like to say our work is the first trial to analyze model reprogramming (MR), so we choose the simplest setting (untrainable output mapping). Besider, even in the simplest setting, there are still many MR applications satisfying our assumptions. Hence, we believe the assumption in our paper is reasonable.
+For "reasonability of untrainable output mapping assumption", we would like to say our work is the first trial to analyze model reprogramming (MR), so we choose the simplest setting (untrainable output mapping). Beside, even in the simplest setting, there are still many MR applications satisfying our assumptions. Hence, we believe the assumption in our paper is reasonable.
 
 For "confusion of contribution 3 and conclusion", we want to clarify that the inconsistency between experimental results of VP and  our theoretical predictions could be attributed to the insufficiently large width, which deviates our assumption.We have conducted additional experiments on models with larger width. The corresponding experimental results support our hypothesis, and hence our theory is still valid for VP. We apologize for the inaccurate words in contribution 3. which is misleading. 
 
@@ -90,151 +91,96 @@ Q. Figure 1 is very uninformative. Please illustrate some mathematical concepts 
 >In the revised paper, we will follow your suggestions to revise Figures 1, 2, 3, and to ensure all abbreviations are well defined. We will also fix typos and grammatical errors. 
    
 
-### Weakness.7
+### Weakness.7, Question.2
 Q. On page 2, the contribution noted in 3 is not comprehensible. Your analysis fails for visual classification but when a fully connected (FC) layer is used the the inference holds? isn’t the NTK analysis independent of the type of layers used to build the target model? relating it to the scale of VP and FC is also not clear. Either way please clarify contribution 3.
 
 >In our contribution 3, we want to convey the following things.
 
 >Corollary 1 claims that the loss of target model evaluated on target distribution will decrease as we make the source model deeper. However, the results in Table 4 and Table 6 suggest that such a theoretical prediction holds when we choose FC as input transformation layer, but fails when we choose VP as input transformation layer. We hypothesize that this failure is due to the width of the target model (input dimension of the source model) is not large enough. In NTK theory, the model width needs to be sufficiently large, such that the target model's behavior can be characterized by NTK. In our experiments, the model width is $32\times 32\times 3$, which is sufficiently large for the target model with FC as the input transformation layer. So, the results about FC support our theoretical prediction. On the contrary, $32\times 32\times 3$ is not large enough for the target model with VP as the input transformation layer, so our theoretical prediction fails on the experimental results about VP.
 
->As we stated in section 5, our theory (Corollary 1.) predicts that the loss of target model evaluated on target distribution will decrease as we deepen the source model (DNN/CNN). However, the experimental results in Table 4 and Table 6. suggest that such a theoretical prediction holds when we choose FC as input transformation layer, but fails when we choose VP as input transformation layer.
->We think that this failure is due to the width of the target model (input dimension of the source model) is not large enough. In NTK theory, we require that the width of target (input dimension of the source model) is sufficient large, such that the target model's behavior can be characterized by NTK. For different target model structures (different input transformation layers), it seems that "sufficiently large" has different criterions.
->In our experiments, the width of the target model (input dimension of the source model) is $32\times 32\times 3$. $32\times 32\times 3$ seems to be sufficiently large for the target model with FC input transformation layer, so the experimental results about FC support our theoretical prediction. On the other hand, $32\times 32\times 3$ seems to be insufficiently large for the target model with VP input transformation layer, so our theoretical prediction fails on the experimental results about VP.
-
->an early-stage experimental results show that xxx
-
 ### Weakness.8
 Q. Equation (16) is not accurate, I do not see any dependency on x’ whereas it should be dependent on x’. Moreover, please clarify how you derive it.
 
->A. There is a typo on equation (16). Equation (16) should be:
+>A. There is a typo in Eq. (16); it should be:
 \begin{equation}
 b Y_S^T [K_S + \sigma_S I]^{-1} \Phi(X_S)^T \nabla_{a} \Phi(a(x))
 \nabla_{\theta_A} a(x)
 \{b Y_S^T [K_S + \sigma_S I]^{-1} \Phi(X_S)^T \nabla_{a} \Phi(a(x'))
 \nabla_{\theta_A} a(x')\}^T.
 \end{equation}
+>The derivation of Eq. (16) will be included in the revised paper. 
 
->The deriviation of euquation (16) is based on the defintion of NTK. Given a target model $f(\cdot) = b\circ f_S \circ a = [f^1, f^2, \dots, f^{c_T}]$ where the input transformation layer $a$ is paremeterized by $\theta_A$. The definition 3 tell us that
-\begin{equation}
-    \hat\Theta^{i, j}_T (x, x') = \langle\nabla_{\theta_A}f^i(x), \nabla_{\theta_A}f^j(x')\rangle_{\mathbb{R}^p}
-\end{equation}
-which implies that 
-\begin{equation}
-    \hat\Theta_T (x, x') = \nabla_{\theta_A}f(x)[\nabla_{\theta_A}f(x')]^T.
-\end{equation}
-Besides, Equation 15 tells that
-\begin{equation}
-\nabla_{\theta_A}f(x) = b Y_S^T [K_S + \sigma_S I]^{-1} \Phi(X_S)^T \nabla_{a} \Phi(a(x))
-    \nabla_{\theta_A} a(x).
-\end{equation}
-Thus, $\hat\Theta_T(x, x')$ will be
-\begin{equation}
-b Y_S^T [K_S + \sigma_S I]^{-1} \Phi(X_S)^T \nabla_{a} \Phi(a(x))
-\nabla_{\theta_A} a(x)
-\{b Y_S^T [K_S + \sigma_S I]^{-1} \Phi(X_S)^T \nabla_{a} \Phi(a(x'))
-\nabla_{\theta_A} a(x')\}^T.
-\end{equation}
 ### Weakness.9
 Q. Do the new Kernels you defined in (17)-(18) represent a meaningful concept? if yes, you could possibly name them while introducing them. For instance, can we say is the NTK w.r.t to the input layer and same for others?
 
->A. In equation (17)-(18), we defined three new notations, $\hat\Theta^A(x, x')$, $\hat\Theta^A_S(x, x')$,  and $\Theta_S^b$.
+>Yes, they are meaningful. We will name them while introducing them in the revised paper.
 
->For $\hat\Theta^A(x, x')$, $\hat\Theta^A(x, x')=\nabla_{\theta_A} a(x) [\nabla_{\theta_A} a(x')]^T$ is exact the NTK w.r.t to input transformation layer, whose NTK matrix characterizes how well the input transformation can extract the feature of target data $x_t$.
-
->For $\hat\Theta^A_S(x, x')$, $\hat\Theta^A_S(x, x')= \nabla_a \Phi(a(x)) [\nabla_a \Phi(a(x'))]^T$ is the NTK w.r.t the source model feature map $\Phi$ under the given input transformation layer $a$, whose NTK matrix characterizes how well the source model can extract the feature of target data composed with input transformation layer $a(x_t)$.
-
->For $\Theta_S^b$, $\Theta_S^b = b Y_S^T [K_S + \sigma_S I]^{-1} K_S [K_S + \sigma_S I]^{-1} Y_S b^T$ does not have important concepts. It is just a notation.
 ### Weakness.10
 Q. The regression analysis in figure 3, is based on very sparse points. Is there any reason, you could not include more number of runs and fit a line to them? Nonetheless VP+FC on CNN network seem to be consistent with your analysis while VP is not. Is there a reason for that?
 
->A. The reason that we did not include more runs is the lack of computation resources. We did not have enough computation resources to perform all experiments at that time. We have conducted more experiments for your review. Please check below.
+>A. The reason that we did not include more runs is the insufficient computing resource. We have conducted more experiments; the results are shown below.
 
     TBD CNN/DNN CE/MSE MEV (Wei-Chen)
     
->For the experimental results of VP+FC, we have a potential explanation. As mentioned in our response to Weakness 7, we believe that "sufficiently large" has different criteria for different target model structures (different input transformation layers). VP+FC appears to require less width in the target model to ensure NTK theory holds compared to VP, but more width compared to FC. This explains why FC on both DNN and CNN is consistent with our analysis, why VP on both DNN and CNN is inconsistent with our analysis, and why VP+FC on CNN is consistent with our analysis, whereas VP+FC on DNN is not.
-
-
+>From the results, VP+FC appears to require less width in the target model to ensure NTK theory holds compared to VP, but more width compared to FC. This explains why FC on both DNN and CNN is consistent with our analysis, why VP on both DNN and CNN is inconsistent with our analysis, and why VP+FC on CNN is consistent with our analysis, whereas VP+FC on DNN is not.
 
 ### Weakness.11
 Q. Given the importance of sensitivity of NTK analysis to width of the networks, I expected a set of figures dedicated to effect increasing and decreasing width on consistency of your analysis, which I saw only briefly discussed on page 9. All your figure/ tables are representing depth of networks, I believe you can add some informative figures discussing width.
 
->A. We have conducted experiments for different widths (input dimension of source model). We train the source models on ImageNet10 with the input size of 112, 56, 28, and respectively train the target models with the VP input transformation layer. The corresponding results are presented below.
+>A. We have conducted experiments for different widths (input dimension of source model). We train the source models on ImageNet10 with the input size of 112, 56, 28, and train the target models with VP as the input transformation layer. The results are shown below.
 
     TBD ImageNet-10 112, 56, 28 (Wei-Chen)
 
 ### Question.1
 Q. Fixing the output transformation layer “b” in the assumption 2 seems to be very limiting. If it is not trainable, then it might as well be considered as a layer inside the source model so why do you need to introduce it separately? My understanding is that this assumption made the derivations of NTK more feasible. However, wouldn’t it be feasible to fix “b”, do the analysis for “a” and then similarly fix “a” and do the NTK analysis for b? if this was your reasoning or not, either way please elaborate more on assumption 2 and clarify in the paper why it is not a limiting assumption.
 
->A. Our assumption 2 requires three things: (1.) Source model $f_S$ satisfies large width assumption and hence satisfies NTK theory. (2.) Output mapping $b$ is a linear matrix. (3.) Output mapping $b$ is untrainable.
+>Our assumption 2 requires three things: (1) Source model $f_S$ has large width and hence satisfies NTK theory. (2) Output mapping $b$ is a linear matrix. (3) Output mapping $b$ is untrainable.
 
->We believe our assumption is not a limiting assumption. For (1.) In our assumption 2, we notice that the source model should be a big model in real-world MR application scenarios. So, the source model $f_S$ naturally satisfies the large model assumption. Besides, many modern NN structures like ResNet, transformer, etc have NTK. [1] proved that any modern NN satisfying "Simple gradient independence assumption (GIA) Check" has NTK. Hence, we believe that assuming source model $f_S$ satisfying NTK theory is reasonable. For (2.) and (3.), we require output mapping $b$ is an untrainable linear matrix because such a setting is more feasible to do NTK analysis and there are still many MR paper satisfying this requirement ($b$ is untrainable linear matrix) (need citations here). 
+>Our assumption is not a limiting assumption. For (1), we notice that the source model should be a big model in real-world MR application scenarios. So, the source model $f_S$ naturally has large width. Besides, many modern NN structures like ResNet, transformer, etc have NTK. [1] proved that any modern NN satisfying "Simple gradient independence assumption (GIA) check" has NTK. Hence, assuming source model $f_S$ satisfying NTK theory is reasonable. For (2) and (3), we require that $b$ is an untrainable linear matrix because such a setting is more feasible to do NTK analysis and many MR applications such as BAR (Tsai et al., 2020) and V2S (Yang et al., 2021) satisfy this requirement ($b$ is untrainable linear matrix). 
 
 >Indeed, “fix output transformation layer $a$ and do the NTK analysis for output mapping $b$” is also feasible. However there is relatively less research under this setting. That is why we set "fix $b$ and do NTK analysis for $a$"" rather than "fix $b$ and do NTK analysis for $a$".
 
->To sum up, with the reasons mentioned above, we believe our assumption 2 is not a limiting assumption.
-
-
-
 [1] Yang, G. (2020). Tensor programs ii: Neural tangent kernel for any architecture. arXiv preprint arXiv:2006.14548.  
-
-### Question.2
-Q. The analysis you provide is independent of the structure source model F_S and the layers a,b. yet, in the numerical result for VP layers it failed. can you provide an explanation?
-
->A. The explanation is provided in the response of Weakness 7.
 
 ### Question.3
 Q. What does notion of percentage “%” mean for minimum eigen value?(Fig. 2)
 
->A. We apologize for confusing the unit "%". We just want to indicate that the unit of the minimum eigenvalue is 1E-2. We will change the unit from (%) into 1E-2 in Fig.2. 
+>A. It indicates that the unit of the minimum eigenvalue is 1e-2. 
 
 
 ### Question.4
 Q. What is the width of source model and a and b layers in your simulation? please mention it in numerical results section and how they satisfy the large width assumption on NTK.
 
->A. The width of the neural network is defined as the number of neurons of the hidden layers. 
+>The width of the neural network is defined as the number of neurons of the hidden layers. For $b$, since $b$ is a single linear matrix in our setting, $b$ does not have width. For $a$, when $a$ is VP or FC, $a$ only has one input layer and one output layer, so $a$ also does not have width. However, when $a$ is VP+FC, $a$ has one hidden layer, which has $32\times 32\times 3$ (input dimension of the source model) neurons. So, the width of $a$ is $32\times 32\times 3$.
 
->For output mapping $b$, since $b$ is a single linear matrix in our setting, $b$ only has one input layer and one output layer. Thus, $b$ does not have width. 
+>For the source model $f_S$, the width of $f_S$ depends on the model structure of $f_S$. The width will be $2048$ when $f_S$ is DNN. Especially, when $f_S$ is CNN, the width is considered as $channel \times filter$. In our experiments, CNN is considered to have $512$ channels and $(3, 3)$ filter. So, the width will be $512\times 3^2$.
 
->For input transformation layer $a$, when $a$ is VP or FC, $a$ only has one input layer and one output layer, so $a$ also does not have width. However, when $a$ is VP+FC, $a$ has one hidden layer, which has $32\times 32\times 3$ (input dimension of the source model) neurons. So, the width of $a$ is $32\times 32\times 3$ (input dimension of the source model)
+>We follow [1] to set the width of the source model. [1] suggested that the training dynamics of CNN and DNN can be well approximated by NTK theory. So, our source model $f_S$ satisfies has a large width.
 
->For the source model $f_S$, the width of $f_S$ (number of neurons of the hidden layers) depends on the model structure of $f_S$. The width (number of neurons of the hidden layers) will be $2048$ when $f_S$ is DNN. Especially, when $f_S$ is CNN, the corresponding width is considered as $channel \times filter$. In our experiments, CNN is considered to have $512$ channels and $(3, 3)$ filter. So, the width will be $512\times 3^2$.
-
-<!-- For target model $f_T=b\circ f_S \circ a$, target model has many hidden layers. In our paper, we simply consider the width of the target model $f_T$ as input dimension of the source model. --> -->
-
->On the other hand, in this paper, we do not require input transformation layers $a$ and output mapping $b$ satisfies NTK Theory. We only need to check the source model $f_S$ satisfies the large width assumption. 
-
->The setting of the width of the source model is referred from [1]. Figure 3 and Figure S2 in [1] have suggested that the training dynamics of CNN and DNN can be well approximated by NTK theory. So, we believe that our source model $f_S$ satisfies a large width assumption.
-
->We will add all these informations in section 5.
-
-[1] Lee, J., Xiao, L., Schoenholz, S., Bahri, Y., Novak, R., Sohl-Dickstein, J., & Pennington, J. (2019). Wide neural networks of any depth evolve as linear models under gradient descent. Advances in neural information processing systems, 32.
+[1] J. Lee, L. Xiao, S. Schoenholz, Y. Bahri, R. Novak, J. Sohl-Dickstein, J. Pennington. Wide neural networks of any depth evolve as linear models under gradient descent. NeurIPS, 2019.
 
 ### Question.5
 Q. “In-context learning” is another finetuning method for repurposing pretrained models for other tasks. Is MR a special case of In-context learning and is your analysis applicable to it? please clarify this in the introduction and if relevant in-context learning too should be discussed in the introduction.
->A. If we think the prompt in in-context learning as input transformation layer, then in-context learning could be considered as a type of MR. Hence,  we believe that in-context learning could be a special case of MR. 
 
->We will add "In-contex learning" and add more citation in section 1 (Introduction).
-    
-    TBD Need more discussion (Ming-Yu)
+> MR is not a special case of In-context learning (ICL). ICL is usually used in large language models (LLMs) while MR is mostly used in classifiers. Besides, the prompts in ICL are derived by a training-free manner (or provided by the user) while the noise in MR needs to be trained with a specific target dataset. 
 
 ## Reviewer 3
 
 ### Weakness.1
 Q. Model Reprogramming (MR) [1] generally refers to the reuse of models from well-trained tasks to resource-limited tasks. In traditional settings, upstream tasks typically involve a large number of classes and are trained on extensive data, while downstream tasks may focus on specific domains. However, the theory and experiments in this paper, such as MR between cifar10, stl10, or SVHN, resemble transfer learning in small-scale classification tasks across different domains. Can the findings in this paper be generalized to traditional MR settings (e.g., where models are pre-trained on large-scale data and a small part of the pre-trained model's training data may even include classes/domains same as the downstream task)?
 
->A. Yes, the findings in this paper can be generalized to traditional MR settings (Large-scale source dataset). In our theory, we do not require that the source dataset or target dataset should be small-scale dataset.
+>A. Yes, our findings can be generalized to traditional MR settings because we do not assume the relation between the source and target task samples/classes/domains. 
 
 ### Weakness.2
 Q. Following the previous question, could experiments be added under traditional MR settings [1-4] (e.g., Using CLIP or ResNet pre-trained on ImageNet, ViT as the pre-trained model)?
 
->A. We have conducted experiments on ResNet and VGG. Please check the following experimental results.
+>A. We have conducted experiments on ResNet and VGG according to the traditional MR settings. The results are shown below. 
 
     TBD-Resnet (Wei-Chen)
 
->As for other transformer-based big pre-trained models (source model), we do not have enough computation resources to computate NTK matrix. So, we cannot add corresponding experiments here. However, we would like to say that transformers also can compute NTK [1] and our theory is also applicable for transformer-based pre-trained model (source model).  
+>As for other transformer-based big pre-trained models (source model), we do not have enough computing resource to compute NTK matrix. However, we would like to say that transformers also can compute NTK [1] and our theory is also applicable for transformer-based pre-trained model (source model).  
 
-
-[1] Yang, G. (2020). Tensor programs ii: Neural tangent kernel for any architecture. arXiv preprint arXiv:2006.14548.
+[1] G. Yang. Tensor programs II: Neural tangent kernel for any architecture. arXiv preprint arXiv:2006.14548, 2020.
 
 ### Weakness.3
 Q. In Assumption 2, the output label mapping is set as an untrainable linear mapping b. This seems unreasonable. Output label mapping, as shown in [1-2], cannot only be trained but also significantly impacts reprogramming performance. Please provide a reasonable explanation.
@@ -246,11 +192,10 @@ Q. In Assumption 2, the output label mapping is set as an untrainable linear map
 ### Weakness.4
 Q. This paper's experimental setup of input reprogramming includes FC and VP. Besides adding training parameters around the images [1-2]. There is also a commonly used reprogramming method that adds trainable watermarks to images after resizing the input images [3-4]. Can this method be considered a form of FC described in the paper? Can the proof in the paper support the performance differences between these two commonly used VP methods?
 
->A. 1. Yes, the watermark-like input transformation layer can be considered as a special case of FC.
+>Yes, the watermark-like input transformation layer can be considered as a special case of FC.
+>In Corollary 1, $\hat\Theta_A (X_T, X_T)$ reflects performance for different input transformation layers $a$ (FC and VP). On the other hand, as for our experimental results in section 5, we find that the FC supports our theoretical prediction but VP fails. We believe that the failure of VP is due to the different criterions of "sufficiently large width of target model (input dimension of the source model)". VP may need a larger input dimension to ensure NTK theory holds.
 
->2. In the corollary 1 in our paper, $\hat\Theta _A (X _T, X _T)$ can reflect performance for different input transformation layers $a$ (FC and VP) . On the other hand, as for our experimental results in section 5, we find that the FC supports our theoretical prediction but VP fails. We believe that the failure of VP is due to the different criterions of "sufficiently large width of target model (input dimension of the source model)". VP may need a larger input dimension to ensure NTK theory holds.
-
->We have conducted experiments with a large source dataset (ImageNet-10 with image size $112\times 112\times 3$) to verify our conjecture mentioned above. Please check the following.
+>We have conducted experiments with a large source dataset (ImageNet-10 with image size $112\times 112\times 3$) to verify our conjecture mentioned above.
 
     TBD ImageNet-10 (Wei-Chen)
 
@@ -260,13 +205,11 @@ Q. This paper's experimental setup of input reprogramming includes FC and VP. Be
 ### Weakness.5
 Q. In the conclusion of Section 6, it is claimed that "Our theoretical results can explain the phenomenon that the success of MR usually depends on the success of the source model" [2], but it is also mentioned that this does not hold for VP (padding parameters) reprogramming, but the method in [2] just uses padding VP. Is this contradictory?
 
->A. We apologize for the confusing text in section 6. Following is our explanation.
+>"Our theoretical results can explain that the success of MR usually depends on the success of the source model" means that our theory prediction aligns with the experimental results in [2]. 
 
->"Our theoretical results can explain that the success of MR usually depends on the success of the source model" means that our theory prediction can align with the experimental results in [2]. 
+>"This does not hold for VP'' means that our theory fails to predict the experimental results conducted in our paper (section 5).
 
->"This does not hold for VP '' means that our theory fails to predict the experimental results conducted in our paper (section 5).
-
->There is no contradiction because the experimental setting of [2] and our experimental setting are different. [2] consider ImageNet-10 as the source dataset, while we use CIFAR-10. ImageNet-10 has a larger image size compared to CIFAR-10. We believe this is the reason that the theory prediction fails on VP. We think that different target model structures (VP, FC, VP+FC) have different criterions of "sufficiently large width of target model (input dimension of the source model)". For VP, the images in CIFAR-10 are not sufficiently large to ensure NTK theory holds, so the experimental results do not align with our theoretical prediction. We have conducted experiments to verify our conjecture. Please check the experiment in the response of Weakness 3.5.
+>There is no contradiction because the experimental setting of [2] and our experimental setting are different. [2] considers ImageNet-10 as the source dataset, while we use CIFAR-10. ImageNet-10 has a larger image size compared to CIFAR-10. We believe this is the reason that the theory prediction fails on VP. We think that different target model structures (VP, FC, VP+FC) have different criterions of "sufficiently large width of target model". For VP, the images in CIFAR-10 are not sufficiently large to ensure NTK theory holds, so the experimental results do not align with our theoretical prediction. We have conducted experiments to verify our conjecture. Please check the experiment in the response of Weakness.5.
 
 
 
